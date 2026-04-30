@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Pet {
 
     private Long id;
@@ -19,27 +18,22 @@ public class Pet {
     private boolean isNeutered;
     private Owner owner;
 
-    private ArrayList<Appointment> appointments;
-    private ArrayList<Pet> pets;
+    private ArrayList<Appointment> appointments = new ArrayList<>();
+    private ArrayList<Pet> pets = new ArrayList<>();
+
+    public Pet() {}
 
     public void addPet(Pet pet) {
-        if (pets == null) {
-            pets = new ArrayList<>();
-        }
         pets.add(pet);
         pet.setOwner(this.getOwner());
     }
 
     public void removePet(Pet pet) {
-        if (pets != null) {
-            pets.remove(pet);
-            pet.setOwner(null);
-        }
+        pets.remove(pet);
+        pet.setOwner(null);
     }
 
     public Pet findPetByName(String name) {
-        if (pets == null) return null;
-
         for (Pet p : pets) {
             if (p.getName().equalsIgnoreCase(name)) {
                 return p;
@@ -49,27 +43,20 @@ public class Pet {
     }
 
     public void addAppointment(Appointment appointment) {
-        if (appointments == null) {
-            appointments = new ArrayList<>();
-        }
         appointments.add(appointment);
         appointment.setPet(this);
     }
 
     public void removeAppointment(Appointment appointment) {
-        if (appointments != null) {
-            appointments.remove(appointment);
-        }
+        appointments.remove(appointment);
     }
 
     public ArrayList<Appointment> getNextAppointments() {
         ArrayList<Appointment> upcoming = new ArrayList<>();
 
-        if (appointments != null) {
-            for (Appointment a : appointments) {
-                if (a.getDate().isAfter(java.time.LocalDateTime.now())) {
-                    upcoming.add(a);
-                }
+        for (Appointment a : appointments) {
+            if (a.getDate().isAfter(java.time.LocalDateTime.now())) {
+                upcoming.add(a);
             }
         }
 

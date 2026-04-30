@@ -25,7 +25,7 @@ public class AdminManager {
         System.out.println("Enter secret answer");
         String secretAnswer = scanner.nextLine();
 
-        admin = Admin.getInstance(username, password, secretQuestion, secretAnswer);
+        admin = new Admin(username, password, secretQuestion, secretAnswer);
     }
 
 

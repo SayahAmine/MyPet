@@ -3,7 +3,9 @@ package stock;
 import enums.ArticleCategory;
 import enums.ArticalUnit;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class ArticalManager {
@@ -27,7 +29,7 @@ public class ArticalManager {
 
             System.out.print("Enter expiration date (yyyy-MM-dd): ");
             String dateStr = scanner.nextLine();
-            Date expirationDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+            LocalDate expirationDate = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
             System.out.print("Enter category : ");
             ArticleCategory category = ArticleCategory.valueOf(scanner.nextLine().toUpperCase());
@@ -41,7 +43,7 @@ public class ArticalManager {
                 return;
             }
 
-            if (expirationDate.before(new Date())) {
+            if (expirationDate.isBefore(LocalDate.now())) {
                 System.out.println("Expiration date must be in the future");
                 return;
             }
@@ -110,13 +112,10 @@ public class ArticalManager {
 
     public  void checkExpiry() {
 
-        Date today = new Date();
+        LocalDate today = LocalDate.now();
 
         for (Artical artical : articals) {
-
-
-            long diff = artical.getExpirationDate().getTime() - today.getTime();
-            long days = diff / (1000 * 60 * 60 * 24);
+            long days = ChronoUnit.DAYS.between(today, artical.getExpirationDate());
 
             if (days <= 30) {
                 System.out.println(artical.getName() + " expires in " + days + " days");
