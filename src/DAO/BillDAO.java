@@ -51,4 +51,49 @@ public class BillDAO {
 
         ps.executeBatch();
     }
+
+    public void update(Appointment.Bill bill) {
+        String sql = "UPDATE bill SET amount=? WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, bill.calculateTotal());
+            ps.setLong(2, bill.getId());
+            ps.executeUpdate();
+
+            // Update bill–artical relations
+            deleteBillArticals(conn, bill.getId());
+            saveBillArticals(conn, bill);
+
+            System.out.println("Bill updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM bill WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // First delete relations
+            deleteBillArticals(conn, id);
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+
+            System.out.println("Bill deleted successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteBillArticals(Connection conn, long billId) throws Exception {
+        String sql = "DELETE FROM bill_artical WHERE bill_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, billId);
+            ps.executeUpdate();
+        }
+    }
+
 }

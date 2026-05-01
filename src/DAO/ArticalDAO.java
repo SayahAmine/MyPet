@@ -36,4 +36,40 @@ public class ArticalDAO {
 
         return a.getId();
     }
+
+    public void update(Artical artical) {
+        String sql = "UPDATE artical SET name=?, quantity=?, lowquantity=?, price=?, expirationDate=?, category=?, unit=? WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, artical.getName());
+            ps.setInt(2, artical.getQuantity());
+            ps.setInt(3, artical.getLowquantity());
+            ps.setInt(4, artical.getPrice());
+            ps.setString(5, artical.getExpirationDate().toString());
+            ps.setString(6, artical.getCategory().name());
+            ps.setString(7, artical.getUnit().name());
+            ps.setLong(8, artical.getId());
+            ps.executeUpdate();
+
+            System.out.println("Artical updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM artical WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+
+            System.out.println("Artical deleted successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

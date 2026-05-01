@@ -31,4 +31,36 @@ public class AppointmentDAO {
 
         return a.getId();
     }
+
+
+    public void update(Appointment appointment) {
+        String sql = "UPDATE appointment SET pet_id=?, date=? WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, appointment.getPet().getId());
+            ps.setString(2, appointment.getDate().toString());
+            ps.setLong(3, appointment.getId());
+            ps.executeUpdate();
+
+            System.out.println("Appointment updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM appointment WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+
+            System.out.println("Appointment deleted successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
