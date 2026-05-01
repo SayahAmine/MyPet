@@ -14,6 +14,8 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class Appointment {
 
+    private Long id;
+
     private Pet pet;
     private LocalDateTime date;
 
@@ -37,6 +39,7 @@ public class Appointment {
     @Setter
     public static class Bill{
 
+        private Long id;
 
         private double amount;
         private ArrayList<Artical>  articalsUsed = new ArrayList<>();
@@ -66,5 +69,7 @@ public class Appointment {
         public int getTotalItems() {
             return articalsUsed.size();
         }
+
+
     }
 }
