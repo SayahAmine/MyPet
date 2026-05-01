@@ -8,8 +8,49 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BillDAO {
+
+
+    public Appointment.Bill findById(long id) {
+        String sql = "SELECT * FROM bill WHERE id=?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Appointment.Bill bill = new Appointment.Bill();
+                bill.setId(rs.getLong("id"));
+                bill.setAmount(rs.getDouble("amount"));
+                // Optionally fetch related articles from bill_artical
+                return bill;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Appointment.Bill> findAll() {
+        List<Appointment.Bill> bills = new ArrayList<>();
+        String sql = "SELECT * FROM bill";
+        try (Connection conn = DBConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Appointment.Bill bill = new Appointment.Bill();
+                bill.setId(rs.getLong("id"));
+                bill.setAmount(rs.getDouble("amount"));
+                bills.add(bill);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bills;
+    }
+
 
     public long save(Appointment.Bill bill, long appointmentId) {
 

@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OwnerDAO {
@@ -31,6 +33,27 @@ public class OwnerDAO {
         }
         return null;
     }
+
+    public List<Owner> findAll() {
+        List<Owner> owners = new ArrayList<>();
+        String sql = "SELECT * FROM owner";
+        try (Connection conn = DBConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Owner owner = new Owner();
+                owner.setId(rs.getLong("id"));
+                owner.setName(rs.getString("name"));
+                owner.setEmail(rs.getString("email"));
+                owner.setPhoneNumber(rs.getInt("phone"));
+                owners.add(owner);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return owners;
+    }
+
 
     public Long save(Owner owner) {
         String sql = "INSERT INTO owner(name, email, phone) VALUES(?,?,?)";
@@ -85,8 +108,4 @@ public class OwnerDAO {
             e.printStackTrace();
         }
     }
-
-
-
-
 }

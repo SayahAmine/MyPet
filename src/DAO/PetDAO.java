@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PetDAO {
 
@@ -24,7 +26,6 @@ public class PetDAO {
                 pet.setAge(rs.getInt("age"));
                 pet.setWeight(rs.getInt("weight"));
                 pet.setNeutered(rs.getBoolean("isNeutered"));
-                // optionally fetch owner_id if needed
                 return pet;
             }
         } catch (Exception e) {
@@ -32,6 +33,29 @@ public class PetDAO {
         }
         return null;
     }
+
+    public List<Pet> findAll() {
+        List<Pet> pets = new ArrayList<>();
+        String sql = "SELECT * FROM pet";
+        try (Connection conn = DBConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Pet pet = new Pet();
+                pet.setId(rs.getLong("id"));
+                pet.setName(rs.getString("name"));
+                pet.setRace(rs.getString("race"));
+                pet.setAge(rs.getInt("age"));
+                pet.setWeight(rs.getInt("weight"));
+                pet.setNeutered(rs.getBoolean("isNeutered"));
+                pets.add(pet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pets;
+    }
+
 
     public long save(Pet pet) {
         String sql = "INSERT INTO pet(name, race, age, weight, isNeutered, owner_id) VALUES(?,?,?,?,?,?)";
